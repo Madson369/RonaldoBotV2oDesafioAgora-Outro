@@ -1,8 +1,8 @@
 const { Events } = require("discord.js");
 
-const channelId = "701571020942868581";
-const rulesChannel = "701571021198590054";
-const rolesChannel = "701571021198590055";
+const messageChannel = "810605680498311208";
+const rulesChannel = "807419813357420555";
+const rolesChannel = "1006575997900034098";
 
 module.exports = {
   name: Events.GuildMemberAdd,
@@ -17,7 +17,7 @@ module.exports = {
       .toString()}
     `;
 
-    const channel = info.guild.channels.cache.get(channelId);
+    const channel = info.guild.channels.cache.get(messageChannel);
     channel.send(message);
   },
 };
