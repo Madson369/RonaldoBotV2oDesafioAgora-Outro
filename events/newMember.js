@@ -8,11 +8,11 @@ module.exports = {
   name: Events.GuildMemberAdd,
   once: false,
   execute(info) {
-    const message = `Teste teste teste <@${
+    const message = `<@${
       info.user.id
-    }> se liga nas regras ${info.guild.channels.cache
+    }> muito boas-vindas ao server, lembre-se de checkar as ${info.guild.channels.cache
       .get(rulesChannel)
-      .toString()} e pega os cargo la no ${info.guild.channels.cache
+      .toString()} e escolher seus ${info.guild.channels.cache
       .get(rolesChannel)
       .toString()}
     `;
