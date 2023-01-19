@@ -4,6 +4,7 @@ Para se inscrever mande seu perfil do challonge e rating update para algum organ
 `;
 
 module.exports = {
+  disabled: false,
   data: new SlashCommandBuilder()
     .setName("fluffy")
     .setDescription("Detalhes sobre torneio!"),

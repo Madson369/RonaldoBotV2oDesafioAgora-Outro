@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
+  disabled: true,
   data: new SlashCommandBuilder()
     .setName("torneio")
     .setDescription("Detalhes sobre torneio!"),
