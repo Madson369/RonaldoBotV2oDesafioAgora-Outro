@@ -8,9 +8,9 @@ module.exports = {
   name: Events.GuildMemberAdd,
   once: false,
   execute(info) {
-    const message = `<@${
+    const message = `<:fluffy:914732955702800384> <@${
       info.user.id
-    }> muito boas-vindas ao server, lembre-se de checkar as ${info.guild.channels.cache
+    }> <:fluffy:914732955702800384> muito boas-vindas ao server, lembre-se de checkar as ${info.guild.channels.cache
       .get(rulesChannel)
       .toString()} e escolher seus ${info.guild.channels.cache
       .get(rolesChannel)

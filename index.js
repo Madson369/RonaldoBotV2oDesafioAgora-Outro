@@ -5,7 +5,6 @@ const path = require("node:path");
 const { Client, Collection, Events, GatewayIntentBits } = require("discord.js");
 const token = process.env.KEY;
 
-console.log("GatewayIntentBits", GatewayIntentBits);
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
 });
@@ -18,7 +17,6 @@ const eventFiles = fs
 for (const file of eventFiles) {
   const filePath = path.join(eventsPath, file);
   const event = require(filePath);
-  console.log("event", event);
   if (event.once) {
     client.once(event.name, (...args) => event.execute(...args));
   } else {
