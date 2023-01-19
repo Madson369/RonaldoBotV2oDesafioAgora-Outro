@@ -12,8 +12,9 @@ module.exports = {
       info.user.id
     }> se liga nas regras ${info.guild.channels.cache
       .get(rulesChannel)
-      .toString()} e pega os cargo la no
-    ${info.guild.channels.cache.get(rolesChannel).toString()}
+      .toString()} e pega os cargo la no ${info.guild.channels.cache
+      .get(rolesChannel)
+      .toString()}
     `;
 
     const channel = info.guild.channels.cache.get(channelId);
