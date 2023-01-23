@@ -1,7 +1,9 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 
+//Main command to get the character move info
 async function getMove(personagem, ataque) {
+  //List of current available characters in dustloop.com
   let arr = [
     "Bridget",
     "Happy_Chaos",
@@ -27,6 +29,7 @@ async function getMove(personagem, ataque) {
     "Testament",
   ];
 
+  //Searches the name of character in lowercase (May cause error)
   let Name = arr.find((nome) => {
     return nome.toLowerCase().match(personagem);
   });
@@ -37,6 +40,7 @@ async function getMove(personagem, ataque) {
     return "Personagem não encontrado";
   }
 
+  //Anonymous function that collects the specific character table requested using the new dustloop site format
   const handleData = (info, sectionId, type = null) => {
     const $ = cheerio.load(info);
     const section = $(sectionId);
@@ -74,6 +78,7 @@ async function getMove(personagem, ataque) {
       });
     }
 
+    //Note that specials have a different character table
     return data.map((move) => {
       return {
         input: move[1],
@@ -97,6 +102,7 @@ async function getMove(personagem, ataque) {
 
   let moves;
 
+  //Anonymous function that requests the character table and returns the organized version
   const getData = async () => {
     console.log("ataque", ataque);
     const response = await axios.get(
@@ -113,6 +119,7 @@ async function getMove(personagem, ataque) {
       );
     });
 
+    //Filters the move list by lowercase search of ataque variable (Twice?)
     const moveArray = moves.filter((move) => {
       return (
         move.name?.toLowerCase().includes(ataque.toLowerCase()) ||

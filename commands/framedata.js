@@ -1,3 +1,7 @@
+/*
+Tenta obter a frame data do golpe de um personagem a partir do dustloop.com
+*/
+
 const { SlashCommandBuilder } = require("discord.js");
 const { getMove } = require("../getMove");
 
