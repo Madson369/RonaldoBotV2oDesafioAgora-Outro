@@ -28,10 +28,8 @@ async function getMove(personagem, ataque) {
   ];
 
   let Name = arr.find((nome) => {
-    return nome.toLowerCase().match(personagem);
+    return nome.toLowerCase().match(personagem.toLowerCase());
   });
-
-  console.log("name", Name);
 
   if (!Name) {
     return "Personagem não encontrado";
@@ -98,6 +96,7 @@ async function getMove(personagem, ataque) {
   let moves;
 
   const getData = async () => {
+    console.log("Name", Name);
     console.log("ataque", ataque);
     const response = await axios.get(
       `https://dustloop.com/w/GGST/${Name}/Frame_Data`
@@ -107,13 +106,11 @@ async function getMove(personagem, ataque) {
     let specials = handleData(response.data, "#section-collapsible-4");
     moves = [...normals, ...specials];
     let move = moves.find((move) => {
-      return (
-        move.name?.toLowerCase() == ataque.toLowerCase() ||
-        move.input.toLowerCase() == ataque.toLowerCase()
-      );
+      return move?.name == ataque || move.input == ataque;
     });
 
     const moveArray = moves.filter((move) => {
+      console.log("move", move);
       return (
         move.name?.toLowerCase().includes(ataque.toLowerCase()) ||
         move.input.toLowerCase().includes(ataque.toLowerCase())
