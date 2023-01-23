@@ -72,6 +72,7 @@ async function getMove(personagem, ataque) {
           proration: move[12],
           riscGain: move[13],
           riscLoss: move[14],
+          character: Name.replace("_", " "),
         };
       });
     }
@@ -94,6 +95,7 @@ async function getMove(personagem, ataque) {
         proration: move[13],
         riscGain: move[14],
         riscLoss: move[15],
+        character: Name.replace("_", " "),
       };
     });
   };

@@ -4,36 +4,21 @@ Tenta obter a frame data do golpe de um personagem a partir do dustloop.com
 
 const { SlashCommandBuilder } = require("discord.js");
 const { getMove } = require("../getMove");
-const { EmbedBuilder } = require("discord.js");
 
-const exampleEmbed = new EmbedBuilder()
-  .setColor(0x0099ff)
-  .setTitle("Some title")
-  .setURL("https://discord.js.org/")
-  .setAuthor({
-    name: "Some name",
-    iconURL: "https://i.imgur.com/AfFp7pu.png",
-    url: "https://discord.js.org",
-  })
-  .setDescription("Some description here")
-  .setThumbnail("https://i.imgur.com/AfFp7pu.png")
-  .addFields(
-    { name: "Regular field title", value: "Some value here" },
-    { name: "\u200B", value: "\u200B" },
-    { name: "Inline field title", value: "Some value here", inline: true },
-    { name: "Inline field title", value: "Some value here", inline: true }
-  )
-  .addFields({
-    name: "Inline field title",
-    value: "Some value here",
-    inline: true,
-  })
-  .setImage("https://i.imgur.com/AfFp7pu.png")
-  .setTimestamp()
-  .setFooter({
-    text: "Some footer text here",
-    iconURL: "https://i.imgur.com/AfFp7pu.png",
-  });
+function formatObject(obj) {
+  let result = [];
+  for (let key in obj) {
+    let newObj = {
+      name: key,
+      value: obj[key] ? obj[key] : "-",
+      inline: true,
+    };
+    if (key !== "character") {
+      result.push(newObj);
+    }
+  }
+  return result;
+}
 
 module.exports = {
   disabled: false,
@@ -58,8 +43,69 @@ module.exports = {
     const move = interaction.options.getString("move");
     let info = await getMove(character, move);
     console.log("info: ", info);
+
+    if (info.length > 0) {
+      const exampleEmbed = {
+        color: 0x0099ff,
+        title: info.name
+          ? `${info[0].character} ${info[0].name} `
+          : `${info[0].character} ${info[0].input}`,
+        // url: "https://discord.js.org",
+        // author: {
+        //   name: "Some name",
+        //   icon_url: "https://i.imgur.com/AfFp7pu.png",
+        //   url: "https://discord.js.org",
+        // },
+        // description: "Some description here",
+        // thumbnail: {
+        //   url: "https://i.imgur.com/AfFp7pu.png",
+        // },
+        fields: [
+          ...formatObject(info[0]),
+          // {
+          //   name: "Regular field title",
+          //   value: "Some value here",
+          // },
+          // {
+          //   name: "\u200b",
+          //   value: "\u200b",
+          //   inline: false,
+          // },
+          // {
+          //   name: "Inline field title",
+          //   value: "Some value here",
+          //   inline: true,
+          // },
+          // {
+          //   name: "Inline field title",
+          //   value: "Some value here",
+          //   inline: true,
+          // },
+          // {
+          //   name: "Inline field title",
+          //   value: "Some value here",
+          //   inline: true,
+          // },
+        ],
+        image: {
+          url: "https://i.imgur.com/AfFp7pu.png",
+        },
+        // timestamp: new Date().toISOString(),
+        // footer: {
+        //   text: "Some footer text here",
+        //   icon_url: "https://i.imgur.com/AfFp7pu.png",
+        // },
+      };
+
+      await interaction.reply({
+        embeds: [exampleEmbed],
+        ephemeral: false,
+      });
+      return;
+    }
+
     await interaction.reply({
-      content: JSON.stringify(info) || "deu ruim",
+      content: "deu ruim",
       ephemeral: false,
     });
   },
