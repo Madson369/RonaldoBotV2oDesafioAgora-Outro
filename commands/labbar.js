@@ -21,6 +21,6 @@ module.exports = {
     .setName("labbar")
     .setDescription("O Maze versão bot pede para tu labbar."),
   async execute(interaction) {
-    await interaction.reply({ content: [labMazeEmbed], ephemeral: false });
+    await interaction.reply({ embeds: [labMazeEmbed], ephemeral: false });
   },
 };
