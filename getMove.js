@@ -31,20 +31,32 @@ async function getMove(personagem, ataque) {
 
   //Searches the name of character in lowercase (May cause error)
   let Name = arr.find((nome) => {
-    return nome.toLowerCase().match(personagem.toLowerCase());
+    return nome.replace("-", "").toLowerCase().match(personagem.toLowerCase());
   });
 
   if (!Name) {
     return "Personagem não encontrado";
   }
 
+  if (Name === "Ky_Kiske" && ataque.toLowerCase() === "rtl") {
+    ataque = "Ride the Lightning";
+  }
   //Anonymous function that collects the specific character table requested using the new dustloop site format
   const handleData = (info, sectionId, type = null) => {
     const $ = cheerio.load(info);
     const section = $(sectionId);
 
+    const rowsnaldos = section.find("table tbody");
     const rows = section.find("table tbody tr");
+    rowsnaldos.each((i, rowsnaldo) => {
+      const cells = $(rowsnaldo).find("tr");
+      const rowData = [];
+      cells.each((i, cell) => {
+        let regex = /href="\S+?Hitbox.png"/;
 
+        console.log($(cell).attr("data-details").match(regex)[0]);
+      });
+    });
     const data = [];
     rows.each((i, row) => {
       const cells = $(row).find("td");
@@ -104,28 +116,26 @@ async function getMove(personagem, ataque) {
 
   //Anonymous function that requests the character table and returns the organized version
   const getData = async () => {
-    console.log("Name", Name);
-    console.log("ataque", ataque);
     const response = await axios.get(
       `https://dustloop.com/w/GGST/${Name}/Frame_Data`
     );
 
     let normals = handleData(response.data, "#section-collapsible-3", "normal");
     let specials = handleData(response.data, "#section-collapsible-4");
-    moves = [...normals, ...specials];
-    let move = moves.find((move) => {
-      return move?.name == ataque || move.input == ataque;
-    });
+    let overdrives = handleData(response.data, "#section-collapsible-5");
+    moves = [...normals, ...specials, ...overdrives];
 
     //Filters the move list by lowercase search of ataque variable (Twice?)
     const moveArray = moves.filter((move) => {
-      console.log("move", move);
       return (
-        move.name?.toLowerCase().includes(ataque.toLowerCase()) ||
+        move.name
+          ?.replace(/\./g, "")
+          .toLowerCase()
+          .includes(ataque.toLowerCase()) ||
         move.input.toLowerCase().includes(ataque.toLowerCase())
       );
     });
-    console.log("moves", moveArray);
+    // console.log("moves", moveArray);
 
     return moveArray;
   };

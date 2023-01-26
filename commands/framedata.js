@@ -42,7 +42,12 @@ module.exports = {
     const character = interaction.options.getString("personagem");
     const move = interaction.options.getString("move");
     let info = await getMove(character, move);
-    console.log("info: ", info);
+    if (info === "Personagem não encontrado") {
+      await interaction.reply({
+        content: info,
+        ephemeral: false,
+      });
+    }
 
     if (info.length > 0) {
       const exampleEmbed = {
