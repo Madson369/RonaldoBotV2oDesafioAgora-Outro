@@ -6,6 +6,7 @@ const { SlashCommandBuilder } = require("discord.js");
 const { getMove } = require("../getMove");
 
 function formatObject(obj) {
+  console.log(obj);
   let result = [];
   for (let key in obj) {
     let newObj = {
@@ -13,7 +14,7 @@ function formatObject(obj) {
       value: obj[key] ? obj[key] : "-",
       inline: true,
     };
-    if (key !== "character") {
+    if (key !== "character" && key !== "url" && key !== "riscLoss") {
       result.push(newObj);
     }
   }
@@ -93,7 +94,7 @@ module.exports = {
           // },
         ],
         image: {
-          url: "https://i.imgur.com/AfFp7pu.png",
+          url: `https://www.dustloop.com${info[0].url}`,
         },
         // timestamp: new Date().toISOString(),
         // footer: {

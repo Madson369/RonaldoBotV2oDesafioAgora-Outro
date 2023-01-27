@@ -45,19 +45,20 @@ async function getMove(personagem, ataque) {
   const handleData = (info, sectionId, type = null) => {
     const $ = cheerio.load(info);
     const section = $(sectionId);
-
+    const regex = /href="\S+?[Hh]itbox.*?png"/;
+    let arrayUrl = [];
     const rowsnaldos = section.find("table tbody");
     const rows = section.find("table tbody tr");
     rowsnaldos.each((i, rowsnaldo) => {
       const cells = $(rowsnaldo).find("tr");
       const rowData = [];
       cells.each((i, cell) => {
-        let regex = /href="\S+?Hitbox.png"/;
-
-        console.log($(cell).attr("data-details").match(regex)[0]);
+        arrayUrl.push($(cell).attr("data-details").match(regex)[0]);
       });
     });
+
     const data = [];
+
     rows.each((i, row) => {
       const cells = $(row).find("td");
       const rowData = [];
@@ -68,7 +69,7 @@ async function getMove(personagem, ataque) {
     });
 
     if (type === "normal") {
-      return data.map((move) => {
+      return data.map((move, index) => {
         return {
           input: move[1],
           damage: move[2],
@@ -85,12 +86,13 @@ async function getMove(personagem, ataque) {
           riscGain: move[13],
           riscLoss: move[14],
           character: Name.replace("_", " "),
+          url: arrayUrl[index].replace('href="', "").replace('"', ""),
         };
       });
     }
 
     //Note that specials have a different character table
-    return data.map((move) => {
+    return data.map((move, index) => {
       return {
         input: move[1],
         name: move[2],
@@ -108,6 +110,7 @@ async function getMove(personagem, ataque) {
         riscGain: move[14],
         riscLoss: move[15],
         character: Name.replace("_", " "),
+        url: arrayUrl[index].replace('href="', "").replace('"', ""),
       };
     });
   };
@@ -115,6 +118,19 @@ async function getMove(personagem, ataque) {
   let moves;
 
   //Anonymous function that requests the character table and returns the organized version
+
+  const getImage = async (url) => {
+    const response = await axios.get(`https://dustloop.com/${url}`);
+    const $ = cheerio.load(response.data);
+    const imageDiv = $(".fullImageLink");
+    const image = imageDiv.find("img");
+    url = image.attr("src");
+
+    let newUrl = url.split("?")[0];
+
+    return newUrl;
+  };
+
   const getData = async () => {
     const response = await axios.get(
       `https://dustloop.com/w/GGST/${Name}/Frame_Data`
@@ -135,9 +151,14 @@ async function getMove(personagem, ataque) {
         move.input.toLowerCase().includes(ataque.toLowerCase())
       );
     });
-    // console.log("moves", moveArray);
+    const teste = await Promise.all(
+      moveArray.map(async (move) => {
+        let image = await getImage(move.url);
+        return { ...move, url: image };
+      })
+    );
 
-    return moveArray;
+    return teste;
   };
 
   return getData();
