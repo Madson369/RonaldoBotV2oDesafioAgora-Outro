@@ -31,7 +31,10 @@ async function getMove(personagem, ataque) {
 
   //Searches the name of character in lowercase (May cause error)
   let Name = arr.find((nome) => {
-    return nome.replace("-", "").toLowerCase().match(personagem.toLowerCase());
+    return nome
+      .replace("-", "")
+      .toLowerCase()
+      .match(personagem.toLowerCase().replace("-", ""));
   });
 
   if (!Name) {
@@ -46,6 +49,8 @@ async function getMove(personagem, ataque) {
     const $ = cheerio.load(info);
     const section = $(sectionId);
     const regex = /href="\S+?[Hh]itbox.*?png"/;
+    const noHitboxRegex = /href="\S+?.*?png"/;
+
     let arrayUrl = [];
     const rowsnaldos = section.find("table tbody");
     const rows = section.find("table tbody tr");
@@ -53,7 +58,15 @@ async function getMove(personagem, ataque) {
       const cells = $(rowsnaldo).find("tr");
       const rowData = [];
       cells.each((i, cell) => {
-        arrayUrl.push($(cell).attr("data-details").match(regex)[0]);
+        const urlSource = $(cell).attr("data-details");
+        if (urlSource.match(regex)) {
+          arrayUrl.push(urlSource.match(regex)[0]);
+          return;
+        }
+        if (urlSource.match(noHitboxRegex)) {
+          arrayUrl.push(urlSource.match(noHitboxRegex)[0]);
+          return;
+        }
       });
     });
 
