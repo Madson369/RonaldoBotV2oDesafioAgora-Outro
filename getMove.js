@@ -67,6 +67,7 @@ async function getMove(personagem, ataque) {
           arrayUrl.push(urlSource.match(noHitboxRegex)[0]);
           return;
         }
+        arrayUrl.push("");
       });
     });
 
