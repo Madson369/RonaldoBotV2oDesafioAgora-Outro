@@ -51,60 +51,62 @@ module.exports = {
     }
 
     if (info.length > 0) {
-      const exampleEmbed = {
-        color: 0x0099ff,
-        title: info.name
-          ? `${info[0].character} ${info[0].name} `
-          : `${info[0].character} ${info[0].input}`,
-        // url: "https://discord.js.org",
-        // author: {
-        //   name: "Some name",
-        //   icon_url: "https://i.imgur.com/AfFp7pu.png",
-        //   url: "https://discord.js.org",
-        // },
-        // description: "Some description here",
-        // thumbnail: {
-        //   url: "https://i.imgur.com/AfFp7pu.png",
-        // },
-        fields: [
-          ...formatObject(info[0]),
-          // {
-          //   name: "Regular field title",
-          //   value: "Some value here",
+      const embedArray = info.map((move) => {
+        return {
+          color: 0xd69226,
+          title: info.name
+            ? `${move.character} ${move.name} `
+            : `${move.character} ${move.input}`,
+          // url: "https://discord.js.org",
+          // author: {
+          //   name: "Some name",
+          //   icon_url: "https://i.imgur.com/AfFp7pu.png",
+          //   url: "https://discord.js.org",
           // },
-          // {
-          //   name: "\u200b",
-          //   value: "\u200b",
-          //   inline: false,
+          // description: "Some description here",
+          // thumbnail: {
+          //   url: "https://i.imgur.com/AfFp7pu.png",
           // },
-          // {
-          //   name: "Inline field title",
-          //   value: "Some value here",
-          //   inline: true,
+          fields: [
+            ...formatObject(move),
+            // {
+            //   name: "Regular field title",
+            //   value: "Some value here",
+            // },
+            // {
+            //   name: "\u200b",
+            //   value: "\u200b",
+            //   inline: false,
+            // },
+            // {
+            //   name: "Inline field title",
+            //   value: "Some value here",
+            //   inline: true,
+            // },
+            // {
+            //   name: "Inline field title",
+            //   value: "Some value here",
+            //   inline: true,
+            // },
+            // {
+            //   name: "Inline field title",
+            //   value: "Some value here",
+            //   inline: true,
+            // },
+          ],
+          image: {
+            url: `https://www.dustloop.com${move.url}`,
+          },
+          // timestamp: new Date().toISOString(),
+          // footer: {
+          //   text: "Some footer text here",
+          //   icon_url: "https://i.imgur.com/AfFp7pu.png",
           // },
-          // {
-          //   name: "Inline field title",
-          //   value: "Some value here",
-          //   inline: true,
-          // },
-          // {
-          //   name: "Inline field title",
-          //   value: "Some value here",
-          //   inline: true,
-          // },
-        ],
-        image: {
-          url: `https://www.dustloop.com${info[0].url}`,
-        },
-        // timestamp: new Date().toISOString(),
-        // footer: {
-        //   text: "Some footer text here",
-        //   icon_url: "https://i.imgur.com/AfFp7pu.png",
-        // },
-      };
+        };
+      });
 
       await interaction.reply({
-        embeds: [exampleEmbed],
+        embeds: [...embedArray],
         ephemeral: false,
       });
       return;
