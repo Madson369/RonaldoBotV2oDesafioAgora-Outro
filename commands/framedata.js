@@ -105,6 +105,13 @@ module.exports = {
         };
       });
 
+      // await interaction.reply({
+      //   content: `O vei achei esses move aqui ${info.map((move) => {
+      //     return move.name ?? move.input;
+      //   })}`,
+      //   ephemeral: false,
+      // });
+
       await interaction.reply({
         embeds: [...embedArray],
         ephemeral: false,
