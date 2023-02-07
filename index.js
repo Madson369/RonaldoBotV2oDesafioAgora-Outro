@@ -31,18 +31,34 @@ const commandFiles = fs
   .readdirSync(commandsPath)
   .filter((file) => file.endsWith(".js"));
 
-for (const file of commandFiles) {
-  const filePath = path.join(commandsPath, file);
-  const command = require(filePath);
-  // Set a new item in the Collection with the key as the command name and the value as the exported module
-  if ("data" in command && "execute" in command) {
-    client.commands.set(command.data.name, command);
-  } else {
-    console.log(
-      `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
-    );
+async function processCommands() {
+  for (const file of commandFiles) {
+    const filePath = path.join(commandsPath, file);
+    const command = require(filePath);
+    if (command instanceof Promise) {
+      try {
+        const resolvedCommand = await command;
+        client.commands.set(resolvedCommand.data.name, resolvedCommand);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      // Set a new item in the Collection with the key as the command name and the value as the exported module
+      if ("data" in command && "execute" in command) {
+        console.log(command.data.name);
+        client.commands.set(command.data.name, command);
+      } else {
+        console.log(
+          `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
+        );
+      }
+    }
   }
 }
 
-// Log in to Discord with your client's token
-client.login(token);
+processCommands();
+
+setTimeout(() => {
+  // Log in to Discord with your client's token
+  client.login(token);
+}, 2000);
