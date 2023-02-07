@@ -6,7 +6,6 @@ const { SlashCommandBuilder } = require("discord.js");
 const { getMove } = require("../getMove");
 
 function formatObject(obj) {
-  console.log(obj);
   let result = [];
   for (let key in obj) {
     let newObj = {

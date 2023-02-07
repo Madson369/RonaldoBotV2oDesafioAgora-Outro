@@ -5,7 +5,6 @@ module.exports = {
   disabled: false,
   data: new SlashCommandBuilder().setName("teste").setDescription("teste!"),
   async execute(interaction) {
-    console.log(interaction.member.roles.cache);
     // console.log("interaction", interaction.member);
 
     fs.readFile("data.json", async (err, data) => {
