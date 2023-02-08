@@ -48,8 +48,8 @@ async function getMove(personagem, ataque) {
   const handleData = (info, sectionId, type = null) => {
     const $ = cheerio.load(info);
     const section = $(sectionId);
-    const regex = /href="\S+?[Hh]itbox.*?png"/;
-    const noHitboxRegex = /href="\S+?.*?png"/;
+    const regex = /href="\S+?[Hh]itbox.*?png"/g;
+    const noHitboxRegex = /href="\S+?.*?png"/g;
 
     let arrayUrl = [];
     const rowsnaldos = section.find("table tbody");
@@ -60,11 +60,11 @@ async function getMove(personagem, ataque) {
       cells.each((i, cell) => {
         const urlSource = $(cell).attr("data-details");
         if (urlSource.match(regex)) {
-          arrayUrl.push(urlSource.match(regex)[0]);
+          arrayUrl.push(urlSource.match(regex).at(-1));
           return;
         }
         if (urlSource.match(noHitboxRegex)) {
-          arrayUrl.push(urlSource.match(noHitboxRegex)[0]);
+          arrayUrl.push(urlSource.match(noHitboxRegex).at(-1));
           return;
         }
         arrayUrl.push("");
@@ -156,13 +156,15 @@ async function getMove(personagem, ataque) {
     moves = [...normals, ...specials, ...overdrives];
 
     //Filters the move list by lowercase search of ataque variable (Twice?)
+
     const moveArray = moves.filter((move) => {
       return (
         move.name
           ?.replace(/\./g, "")
           .toLowerCase()
-          .includes(ataque.toLowerCase()) ||
-        move.input.toLowerCase().includes(ataque.toLowerCase())
+          .includes(ataque.replace(/\./g, "").toLowerCase()) ||
+        move.input.replace(/\./g, "").toLowerCase() ===
+          ataque.replace(/\./g, "").toLowerCase()
       );
     });
     const teste = await Promise.all(
