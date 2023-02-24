@@ -33,8 +33,15 @@ async function getMove(personagem, ataque) {
   let Name = arr.find((nome) => {
     return nome
       .replace("-", "")
+      .replace("_", "")
       .toLowerCase()
-      .match(personagem.toLowerCase().replace("-", ""));
+      .match(
+        personagem
+          .toLowerCase()
+          .replace("-", "")
+          .replace("_", "")
+          .replace(" ", "")
+      );
   });
 
   if (!Name) {
