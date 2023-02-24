@@ -44,7 +44,9 @@ const teste = () =>
 
         const permissionBool = roleArray.some((role) => {
           return (
-            role === "807823269306695680" || role === "1065679711931482112"
+            role === "807823269306695680" ||
+            role === "1065679711931482112" ||
+            role === "850420756314587227"
           );
         });
 
