@@ -6,8 +6,16 @@ const { Client, Collection, Events, GatewayIntentBits } = require("discord.js");
 const token = process.env.KEY;
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.Guilds,
+  ],
 });
+
+console.log(client.settings);
 
 const eventsPath = path.join(__dirname, "events");
 const eventFiles = fs
