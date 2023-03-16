@@ -39,6 +39,13 @@ module.exports = {
     ),
 
   async execute(interaction) {
+    if (Math.random() <= 0.01) {
+      await interaction.reply({
+        content: "to com preguiça tente novamente mais tarde",
+        ephemeral: false,
+      });
+      return;
+    }
     const character = interaction.options.getString("personagem");
     const move = interaction.options.getString("move");
     let info = await getMove(character, move);
