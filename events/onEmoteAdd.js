@@ -6,6 +6,12 @@ module.exports = {
   async execute(reaction, user) {
     const message = reaction.message;
 
+    const channelId = reaction.message.channelId;
+    const guildId = reaction.message.guildId;
+    const messageId = reaction.message.id;
+
+    const messageLink = `https://discord.com/channels/${guildId}/${channelId}/${messageId}`;
+
     if (reaction.emoji.name !== "💀") return;
 
     const count = message.reactions.cache.get("💀").count;
@@ -57,6 +63,13 @@ module.exports = {
         },
         author: foundStar.author,
         footer: { text: `💀 ${parseInt(star[1]) + 1} | ${message.id}` },
+        fields: [
+          {
+            name: "",
+            value: `[O cringe em questão](${messageLink})`,
+            inline: false,
+          },
+        ],
       };
       // We fetch the ID of the message already on the starboard.
       const starMsg = await starChannel.messages.fetch(stars.id);
@@ -84,6 +97,13 @@ module.exports = {
           iconURL: message.author.avatarURL(),
         },
         footer: { text: `💀 1 | ${message.id}` },
+        fields: [
+          {
+            name: "",
+            value: `[O cringe em questão](${messageLink})`,
+            inline: false,
+          },
+        ],
       };
 
       // const embed = new EmbedBuilder()
