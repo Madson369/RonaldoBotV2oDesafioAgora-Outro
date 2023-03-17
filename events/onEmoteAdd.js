@@ -96,7 +96,7 @@ module.exports = {
           name: message.author.username,
           iconURL: message.author.avatarURL(),
         },
-        footer: { text: `💀 1 | ${message.id}` },
+        footer: { text: `💀 5 | ${message.id}` },
         fields: [
           {
             name: "",
