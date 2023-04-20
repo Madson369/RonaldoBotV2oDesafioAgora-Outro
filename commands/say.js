@@ -13,7 +13,6 @@ module.exports = {
       option.setName("text").setDescription("lança a voz").setRequired(true)
     ),
   async execute(interaction) {
-    console.log(interaction.user.id);
     if (interaction.user.id === "158000799673221121") {
       const text = interaction.options.getString("text");
 
