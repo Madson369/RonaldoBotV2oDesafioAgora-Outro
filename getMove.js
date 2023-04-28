@@ -1,9 +1,54 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 
-//Main command to get the character move info
-async function getMove(personagem, ataque) {
-  //List of current available characters in dustloop.com
+function getLevenshteinDistance(a, b) {
+  const m = a.length;
+  const n = b.length;
+  const dp = Array.from({ length: m + 1 }, () =>
+    Array.from({ length: n + 1 }, () => 0)
+  );
+  for (let i = 1; i <= m; i++) {
+    dp[i][0] = i;
+  }
+  for (let j = 1; j <= n; j++) {
+    dp[0][j] = j;
+  }
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (a[i - 1] === b[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1];
+      } else {
+        dp[i][j] = Math.min(dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1]) + 1;
+      }
+    }
+  }
+  return dp[m][n];
+}
+
+function searchMoves(str, moves, limit = 4) {
+  const results = [];
+  for (let i = 0; i < moves.length; i++) {
+    const { name, input } = moves[i];
+
+    if (
+      name?.replace(/\./g, "").toLowerCase().includes(str.toLowerCase()) ||
+      input?.replace(/\./g, "").toLowerCase().includes(str.toLowerCase())
+    ) {
+      results.push(moves[i]);
+    } else {
+      if (name) {
+        const nameDistance = getLevenshteinDistance(name.toLowerCase(), str);
+
+        if (nameDistance <= limit) {
+          results.push(moves[i]);
+        }
+      }
+    }
+  }
+  return results;
+}
+
+async function getMove(personagem, userInput) {
   let arr = [
     "Bridget",
     "Happy_Chaos",
@@ -30,7 +75,6 @@ async function getMove(personagem, ataque) {
     "Bedman",
   ];
 
-  //Searches the name of character in lowercase (May cause error)
   let Name = arr.find((nome) => {
     return nome
       .replace("-", "")
@@ -49,8 +93,8 @@ async function getMove(personagem, ataque) {
     return "Personagem não encontrado";
   }
 
-  if (Name === "Ky_Kiske" && ataque.toLowerCase() === "rtl") {
-    ataque = "Ride the Lightning";
+  if (Name === "Ky_Kiske" && userInput.toLowerCase() === "rtl") {
+    userInput = "Ride the Lightning";
   }
   //Anonymous function that collects the specific character table requested using the new dustloop site format
   const handleData = (info, sectionId, type = null) => {
@@ -67,8 +111,12 @@ async function getMove(personagem, ataque) {
       const rowData = [];
       cells.each((i, cell) => {
         const urlSource = $(cell).attr("data-details");
-        if (urlSource.match(regex)) {
-          arrayUrl.push(urlSource.match(regex).at(-1));
+        const refArray = urlSource.match(regex);
+        const filterMoves = refArray.filter((move) => {
+          return !move.includes("less");
+        });
+        if (filterMoves) {
+          arrayUrl.push(filterMoves.at(-1));
           return;
         }
         if (urlSource.match(noHitboxRegex)) {
@@ -163,24 +211,33 @@ async function getMove(personagem, ataque) {
     let overdrives = handleData(response.data, "#section-collapsible-5");
     moves = [...normals, ...specials, ...overdrives];
 
-    //Filters the move list by lowercase search of ataque variable (Twice?)
+    const moveArray = searchMoves(
+      userInput.replace(/\./g, "").toLowerCase(),
+      moves,
+      Name === "Nagoriyuki" ? 0 : 4
+    );
 
-    const moveArray = moves.filter((move) => {
-      return (
-        move.name
-          ?.replace(/\./g, "")
-          .toLowerCase()
-          .includes(ataque.replace(/\./g, "").toLowerCase()) ||
-        move.input.replace(/\./g, "").toLowerCase() ===
-          ataque.replace(/\./g, "").toLowerCase()
-      );
-    });
+    // const moveArray = moves.filter((move) => {
+    //   return (
+    //     move.name
+    //       ?.replace(/\./g, "")
+    //       .toLowerCase()
+    //       .includes(userInput.replace(/\./g, "").toLowerCase()) ||
+    //     move.input.replace(/\./g, "").toLowerCase() ===
+    //       userInput.replace(/\./g, "").toLowerCase()
+    //   );
+    // });
+
     const teste = await Promise.all(
       moveArray.map(async (move) => {
         let image = await getImage(move.url);
         return { ...move, url: image };
       })
     );
+
+    if (teste.length > 5) {
+      return [teste[0], teste[1], teste[2], teste[3]];
+    }
 
     return teste;
   };

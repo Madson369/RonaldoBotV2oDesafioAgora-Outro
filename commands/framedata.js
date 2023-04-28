@@ -63,51 +63,11 @@ module.exports = {
           title: info.name
             ? `${move.character} ${move.name} `
             : `${move.character} ${move.input}`,
-          // url: "https://discord.js.org",
-          // author: {
-          //   name: "Some name",
-          //   icon_url: "https://i.imgur.com/AfFp7pu.png",
-          //   url: "https://discord.js.org",
-          // },
-          // description: "Some description here",
-          // thumbnail: {
-          //   url: "https://i.imgur.com/AfFp7pu.png",
-          // },
-          fields: [
-            ...formatObject(move),
-            // {
-            //   name: "Regular field title",
-            //   value: "Some value here",
-            // },
-            // {
-            //   name: "\u200b",
-            //   value: "\u200b",
-            //   inline: false,
-            // },
-            // {
-            //   name: "Inline field title",
-            //   value: "Some value here",
-            //   inline: true,
-            // },
-            // {
-            //   name: "Inline field title",
-            //   value: "Some value here",
-            //   inline: true,
-            // },
-            // {
-            //   name: "Inline field title",
-            //   value: "Some value here",
-            //   inline: true,
-            // },
-          ],
+
+          fields: [...formatObject(move)],
           image: {
             url: `https://www.dustloop.com${move.url}`,
           },
-          // timestamp: new Date().toISOString(),
-          // footer: {
-          //   text: "Some footer text here",
-          //   icon_url: "https://i.imgur.com/AfFp7pu.png",
-          // },
         };
       });
 
@@ -122,6 +82,7 @@ module.exports = {
         embeds: [...embedArray],
         ephemeral: false,
       });
+
       return;
     }
 
