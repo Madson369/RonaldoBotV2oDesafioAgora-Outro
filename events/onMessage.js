@@ -4,15 +4,6 @@ module.exports = {
   name: Events.MessageCreate,
   async execute(mensagem) {
     {
-      // const reactionEmoji = mensagem.guild.emojis.cache.find(
-      //   (emoji) => emoji.name === "fluffy"
-      // );
-
-      //   if (mensagem.content.includes("trigger")) {
-      //     mensagem.reply("teste!").then(/* ... */).catch(console.error);
-      //     mensagem.react(reactionEmoji).then().catch(console.error);
-      //     return;
-      //   }
       if (mensagem.content.toLowerCase() === "chat") {
         const number = Math.random();
         if (number <= 0.05) {

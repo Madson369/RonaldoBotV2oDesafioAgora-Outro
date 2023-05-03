@@ -19,5 +19,8 @@ module.exports = {
 
     const channel = info.guild.channels.cache.get(messageChannel);
     channel.send(message);
+    setTimeout(() => {
+      channel.send(message);
+    }, 15000);
   },
 };
