@@ -112,7 +112,7 @@ async function getMove(personagem, userInput) {
       cells.each((i, cell) => {
         const urlSource = $(cell).attr("data-details");
         const refArray = urlSource.match(regex);
-        const filterMoves = refArray.filter((move) => {
+        const filterMoves = refArray?.filter((move) => {
           return !move.includes("less");
         });
         if (filterMoves) {
