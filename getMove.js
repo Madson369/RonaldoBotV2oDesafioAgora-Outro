@@ -28,6 +28,7 @@ async function getMove(personagem, ataque) {
     "Sin_Kiske",
     "Testament",
     "Bedman",
+    "Asuka_R",
   ];
 
   //Searches the name of character in lowercase (May cause error)
